@@ -1,0 +1,39 @@
+import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:materias_app/screens/auth/login_screen.dart';
+
+class LogoutController {
+  static Future<void> logout(BuildContext context) async {
+    final prefs = await SharedPreferences.getInstance();
+    final token = prefs.getString('accessToken');
+
+    if (token != null) {
+      final url = Uri.parse('https://app-iv-ii-main-td0mcu.laravel.cloud/api/logout');
+      final headers = {
+        'Authorization': 'Bearer $token',
+        'Content-Type': 'application/json',
+      };
+
+      try {
+        final response = await http.post(url, headers: headers);
+
+        if (response.statusCode == 200) {
+          debugPrint('Logout exitoso en la API');
+        } else {
+          debugPrint('Error al hacer logout en la API: ${response.body}');
+        }
+      } catch (e) {
+        debugPrint('Error de conexión con la API: $e');
+      }
+    }
+
+    await prefs.remove('accessToken'); // 🔹 Elimina el token local después de la API
+
+    Navigator.pushAndRemoveUntil(
+      context,
+      MaterialPageRoute(builder: (_) => SignInScreen()),
+      (route) => false,
+    );
+  }
+}

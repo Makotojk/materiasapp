@@ -1,0 +1,74 @@
+import 'package:flutter/material.dart';
+import 'dart:convert';
+import 'package:http/http.dart' as http;
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:materias_app/screens/auth/login_screen.dart';
+
+/// Esta función hace login y devuelve el token si es exitoso, o null si falla.
+Future<String?> login(String email, String password) async {
+  const String baseUrl = 'https://app-iv-ii-main-td0mcu.laravel.cloud/api/login';
+
+  var headers = {
+    'Accept': 'application/json',
+    'Content-Type': 'application/json',
+    'cache-control': 'no-cache',
+  };
+
+  var url = Uri.parse(baseUrl);
+  var body = json.encode({'email': email, 'password': password});
+
+  try {
+    final response = await http.post(url, headers: headers, body: body);
+    debugPrint('STATUS CODE: ${response.statusCode}');
+    debugPrint('RESPONSE BODY: ${response.body}');
+
+    if (response.statusCode == 200) {
+      final data = json.decode(response.body);
+
+      if (data.containsKey('accessToken') && data['user'] != null) {
+        // Guardar token en SharedPreferences
+        await saveToken(data['accessToken']);
+
+        // Guardar info del usuario
+        final prefs = await SharedPreferences.getInstance();
+        await prefs.setString('user_email', data['user']['email'] as String);
+        await prefs.setString('user_name', data['user']['name'] as String);
+
+        return data['accessToken']; // Devuelve el token
+      } else {
+        debugPrint('Token o usuario no encontrados en la respuesta');
+        return null;
+      }
+    } else {
+      debugPrint('Error HTTP: ${response.statusCode}');
+      return null;
+    }
+  } catch (e) {
+    debugPrint('Excepción al hacer login: $e');
+    return null;
+  }
+}
+
+/// Guarda el token en SharedPreferences con la llave 'accessToken'
+Future<void> saveToken(String token) async {
+  final SharedPreferences prefs = await SharedPreferences.getInstance();
+  await prefs.setString('accessToken', token);
+}
+
+/// Obtiene el token guardado con la clave correcta
+Future<String?> getToken() async {
+  final SharedPreferences prefs = await SharedPreferences.getInstance();
+  return prefs.getString('accessToken');
+}
+
+/// Borra datos y navega al login
+Future<void> logoutUser(BuildContext context) async {
+  final prefs = await SharedPreferences.getInstance();
+  await prefs.clear();
+
+  Navigator.pushAndRemoveUntil(
+    context,
+    MaterialPageRoute(builder: (_) => SignInScreen()),
+    (route) => false,
+  );
+}

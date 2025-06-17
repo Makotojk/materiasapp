@@ -1,0 +1,75 @@
+// lib/controller/register_controller.dart
+
+import 'dart:convert';
+import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
+import 'package:shared_preferences/shared_preferences.dart';
+
+/// Invoca POST /api/register y devuelve siempre:
+/// { 'success': bool, 'message': String }
+Future<Map<String, dynamic>> register(String name, String email, String password) async {
+  const String baseUrl = 'https://app-iv-ii-main-td0mcu.laravel.cloud/api/register';
+
+  final headers = {
+    'Accept': 'application/json',
+    'Content-Type': 'application/json',
+    'Cache-Control': 'no-cache',
+  };
+
+  final body = json.encode({
+    'name': name,
+    'email': email,
+    'password': password,
+  });
+
+  try {
+    final response = await http.post(
+      Uri.parse(baseUrl),
+      headers: headers,
+      body: body,
+    );
+
+    debugPrint('REGISTER ${response.statusCode}: ${response.body}');
+    final Map<String, dynamic> data = json.decode(response.body);
+
+    // Éxito HTTP
+    if (response.statusCode == 200 || response.statusCode == 201) {
+      // Guardamos token si viene
+      if (data.containsKey('accessToken')) {
+        final prefs = await SharedPreferences.getInstance();
+        await prefs.setString('accessToken', data['accessToken']);
+        await prefs.setString('user_name', data['user']['name'] ?? name);
+        await prefs.setString('user_email', data['user']['email'] ?? email);
+      }
+
+      return {
+        'success': true,
+        'message': data['message'] ?? 'Registro exitoso',
+      };
+    }
+
+    // Validación (422 de Laravel)
+    if (response.statusCode == 422 && data.containsKey('errors')) {
+      final errors = data['errors'] as Map<String, dynamic>;
+      // Primer campo con error
+      final firstKey = errors.keys.first;
+      final firstMsg = (errors[firstKey] as List).first.toString();
+      return {
+        'success': false,
+        'message': firstMsg,
+      };
+    }
+
+    // Otros errores con mensaje
+    return {
+      'success': false,
+      'message': data['message']?.toString() ?? 'Error ${response.statusCode}',
+    };
+  } catch (e) {
+    debugPrint('Exception en register: $e');
+    return {
+      'success': false,
+      'message': 'Error de conexión: $e',
+    };
+  }
+}
