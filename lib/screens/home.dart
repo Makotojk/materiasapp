@@ -173,7 +173,7 @@ class _WelcomePageState extends State<WelcomePage> {
 
             ListTile(
               leading: const Icon(Icons.school, color: Colors.lightBlue),
-              title: const Text('Record Académico', style: TextStyle(color: Colors.lightBlue)),
+              title: const Text('Academic Record', style: TextStyle(color: Colors.lightBlue)),
               onTap: () {
                 Navigator.push(
                   context,
@@ -199,14 +199,14 @@ class _WelcomePageState extends State<WelcomePage> {
       body: SingleChildScrollView(
         child: Column(
           children: [
-            _buildImageBox('assets/sistemas.png', 'Ingeniería en Sistemas', 
-              'Revisa minuciosamente los datos para la creación de programas, aplicativos y herramientas que faciliten los procesos empresariales en un entorno de información segura y protegida.', 
+            _buildImageBox('assets/sistemas.png', 'Systems Engineering', 
+              'Thoroughly reviews data for the creation of programs, applications and tools that facilitate business processes in a safe and secure information environment.', 
               'sistemas', 150),
-            _buildImageBox('assets/industriales.png', 'Ingeniería Industrial', 
-              'Optimiza procesos, sistemas u organizaciones complejos mediante el desarrollo, la mejora y la implementación de sistemas integrados de personas, riqueza, conocimiento, información y equipamiento, energía, materiales y procesos.', 
+            _buildImageBox('assets/industriales.png', 'Industrial Engineering', 
+              'Optimizes complex processes, systems or organizations by developing, improving and implementing integrated systems of people, wealth, knowledge, information and equipment, energy, materials and processes.', 
               'industriales', 168),
-            _buildImageBox('assets/administracion.png', 'Administración de Negocios', 
-              'Asegura el funcionamiento óptimo de cada elemento dentro de la organización, promoviendo el uso eficiente de los recursos aplicándolos para la obtención de las rentabilidades propuestas.', 
+            _buildImageBox('assets/administracion.png', 'Business Administration', 
+              'Ensures the optimal functioning of each element within the organization, promoting the efficient use of resources by applying them to obtain the proposed profitability..', 
               'administracion', 180),
           ],
         ),

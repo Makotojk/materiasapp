@@ -78,7 +78,7 @@ class _MateriasScreenState extends State<MateriasScreen> {
     return Scaffold(
       // Barra superior con título y botón de retroceso.
       appBar: AppBar(
-        title: const Text('Materias', style: TextStyle(color: Colors.white)),
+        title: const Text('Courses', style: TextStyle(color: Colors.white)),
         backgroundColor: Colors.lightBlue,
         leading: IconButton(
           icon: const Icon(Icons.arrow_back, color: Colors.white),
@@ -115,7 +115,7 @@ class _MateriasScreenState extends State<MateriasScreen> {
                   },
                   style: const TextStyle(color: Colors.lightBlue),
                   decoration: const InputDecoration(
-                    labelText: 'Buscar materia',
+                    labelText: 'Search by name',
                     labelStyle: TextStyle(color: Colors.lightBlue),
                     border: OutlineInputBorder(),
                     prefixIcon: Icon(Icons.search, color: Colors.lightBlue),
@@ -137,7 +137,7 @@ class _MateriasScreenState extends State<MateriasScreen> {
                       _loadMaterias();
                     }
                   },
-                  decoration: const InputDecoration(labelText: 'Filtrar por estado', border: OutlineInputBorder()),
+                  decoration: const InputDecoration(labelText: 'Filter by status', border: OutlineInputBorder()),
                 ),
               ],
             ),
@@ -188,14 +188,14 @@ class _MateriasScreenState extends State<MateriasScreen> {
               child: materiaSeleccionada == null
                   ? const Align(
                       alignment: Alignment.topLeft,
-                      child: Text('Selecciona una materia para ver su estado.', style: TextStyle(fontSize: 16, color: Colors.white)),
+                      child: Text('Select a course to view its status.', style: TextStyle(fontSize: 16, color: Colors.white)),
                     )
                   : Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       mainAxisSize: MainAxisSize.min,
                       children: [
                         const Text(
-                          'Detalle de la materia:',
+                          'Course details:',
                           style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18, color: Colors.white),
                         ),
                         const SizedBox(height: 6),
