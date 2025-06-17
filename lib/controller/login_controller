@@ -6,14 +6,21 @@ import 'package:materias_app/screens/auth/login_screen.dart';
 
 /// Esta función hace login y devuelve el token si es exitoso, o null si falla.
 Future<String?> login(String email, String password) async {
-  const String baseUrl = 'https://app-iv-ii-main-td0mcu.laravel.cloud/api/login';
+  final prefs = await SharedPreferences.getInstance();
+  final String? existingToken = prefs.getString('accessToken');
 
+  // Si el usuario ya tiene un token activo, bloquea el inicio de sesión
+  if (existingToken != null && existingToken.isNotEmpty) {
+    debugPrint("Usuario ya autenticado con un token activo.");
+    return null; // Evita enviar otra solicitud de login
+  }
+
+  const String baseUrl = 'https://app-iv-ii-main-td0mcu.laravel.cloud/api/login';
   var headers = {
     'Accept': 'application/json',
     'Content-Type': 'application/json',
     'cache-control': 'no-cache',
   };
-
   var url = Uri.parse(baseUrl);
   var body = json.encode({'email': email, 'password': password});
 
@@ -26,11 +33,8 @@ Future<String?> login(String email, String password) async {
       final data = json.decode(response.body);
 
       if (data.containsKey('accessToken') && data['user'] != null) {
-        // Guardar token en SharedPreferences
         await saveToken(data['accessToken']);
 
-        // Guardar info del usuario
-        final prefs = await SharedPreferences.getInstance();
         await prefs.setString('user_email', data['user']['email'] as String);
         await prefs.setString('user_name', data['user']['name'] as String);
 
@@ -48,6 +52,7 @@ Future<String?> login(String email, String password) async {
     return null;
   }
 }
+
 
 /// Guarda el token en SharedPreferences con la llave 'accessToken'
 Future<void> saveToken(String token) async {

@@ -161,9 +161,13 @@ class _SignUpFormState extends State<SignUpForm> {
               //  Campo de entrada para el nombre.
               _buildField(
                 _nameCtrl,
-                "Name",
+                "Nombre",
                 userIcon,
-                (v) => v == null || v.isEmpty ? 'Please enter your name' : null,
+                (v) {
+                  if (v == null || v.isEmpty) return 'Por favor ingresa tu nombre';
+                  if (!RegExp(r'^[a-zA-Z\s]+$').hasMatch(v)) return 'El nombre solo puede contener letras y espacios';
+                  return null;
+                },
               ),
               const SizedBox(height: 16),
 
@@ -176,6 +180,7 @@ class _SignUpFormState extends State<SignUpForm> {
                 (v) {
                   if (v == null || v.isEmpty) return 'Please enter your email';
                   if (!v.contains('@')) return 'Invalid email';
+                  if (!RegExp(r'^[a-zA-Z0-9._%-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$').hasMatch(v)) return 'Formato de correo inválido (Ejemplo: nombre@email.com)';
                   return null;
                 },
                 keyboard: TextInputType.emailAddress,
