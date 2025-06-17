@@ -249,7 +249,6 @@ class _WelcomePageState extends State<WelcomePage> {
                 fontWeight: FontWeight.bold,
               ),
             ),
-           
             // Información expandible de cada carrera.
             if (_expandedInfo.containsKey(key) && _expandedInfo[key]!)
               Padding(

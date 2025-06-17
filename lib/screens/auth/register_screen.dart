@@ -164,8 +164,8 @@ class _SignUpFormState extends State<SignUpForm> {
                 "Nombre",
                 userIcon,
                 (v) {
-                  if (v == null || v.isEmpty) return 'Por favor ingresa tu nombre';
-                  if (!RegExp(r'^[a-zA-Z\s]+$').hasMatch(v)) return 'El nombre solo puede contener letras y espacios';
+                  if (v == null || v.isEmpty) return 'Please enter your name';
+                  if (!RegExp(r'^[a-zA-Z\s]+$').hasMatch(v)) return 'The name can only contain letters and spaces';
                   return null;
                 },
               ),
@@ -180,7 +180,7 @@ class _SignUpFormState extends State<SignUpForm> {
                 (v) {
                   if (v == null || v.isEmpty) return 'Please enter your email';
                   if (!v.contains('@')) return 'Invalid email';
-                  if (!RegExp(r'^[a-zA-Z0-9._%-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$').hasMatch(v)) return 'Formato de correo inválido (Ejemplo: nombre@email.com)';
+                  if (!RegExp(r'^[a-zA-Z0-9._%-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$').hasMatch(v)) return 'Invalid mail format (Example: nombre@email.com)';
                   return null;
                 },
                 keyboard: TextInputType.emailAddress,
@@ -193,7 +193,7 @@ class _SignUpFormState extends State<SignUpForm> {
                 _passCtrl,
                 "Password",
                 lockIcon,
-                (v) => v == null || v.length < 6 ? 'Min 6 characters' : null,
+                (v) => v == null || v.length < 8 ? 'Min 8 characters' : null,
                 obscure: true,
               ),
               const SizedBox(height: 32),
